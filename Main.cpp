@@ -1,108 +1,12 @@
 #include "SDL.h"
 #include <iostream>
-#include <vector>
 #include <cstdlib>
 #include <ctime>
 
+#include "Sprite.h"
+
 using namespace std;
-
-
-class Sprite{
-  
- protected:
-  SDL_Surface* image;
-  SDL_Rect rect;
-  int origin_x, origin_y;
-  
- public:
-  Sprite (Uint32 color, int x, int y, int w = 48, int h = 64){
-    image = SDL_CreateRGBSurface(0,w,h,32,0,0,0,0);
-
-    SDL_FillRect(image, NULL, color);
-    rect = image->clip_rect;
-
-    origin_y = 0;
-    origin_x = 0;
-
-    rect.x = x - origin_x;
-    rect.y = y - origin_y;
-  }
-  void update(){
-
-  }
-  void draw(SDL_Surface* destination){
-    SDL_BlitSurface(image,NULL,destination,&rect);
-  }
-  SDL_Surface* get_image() const {
-    return image;
-  }
-  bool operator==(const Sprite &other) const{
-    return(image == other.get_image());
-  }
-};
-
-class SpriteGroup{
-  
-private:
-  vector <Sprite*> sprites;
-  int sprites_size;
-  
-  
-
- public:
-
-  vector <Sprite*> getSprites(){
-    return sprites;
-  }
-  SpriteGroup copy(){
-    SpriteGroup new_group;
-    for (int i = 0; i < sprites_size; i++){
-      new_group.add(sprites[i]);
-    }
-    return new_group;
-  }
-  void add(Sprite* sprite){
-    sprites.push_back(sprite);
-    sprites_size = sprites.size();
-  }
-  void remove(Sprite sprite_object){
-    for(int i = 0; i < sprites_size; i++){
-      if(*sprites[i] == sprite_object){
-	sprites.erase(sprites.begin() + i);
-      }
-    }
-    sprites_size = sprites.size();
-  }
-  bool has(Sprite sprite_object){
-    for(int i = 0; i < sprites_size; i++){
-      if(*sprites[i] == sprite_object){
-	return true;
-      }
-    }
-  }
-  void update(){
-    if (!sprites.empty()){
-      for(int i = 0; i < sprites_size; i++){
-	sprites[i]->update();
-      }
-    }
-  }
-  void draw(SDL_Surface* destination){
-    if (!sprites.empty()){
-      for(int i = 0; i < sprites_size; i++){
-        sprites[i]->draw(destination);
-      }
-    }
-  }
-  void empty(){
-    sprites.clear();
-    sprites_size = sprites.size();
-  }
-  int size(){
-    return sprites_size;
-  }
-};
-
+	
 class Segment {
 private:
   Sprite* sprite;
@@ -249,9 +153,10 @@ int main(){
 	board[headPos_y/10][headPos_x/10] = 0;
 	int newX,newY;
 	do{
-	   newX = rand() %51;
-	   newY = rand() %51;
+	   newX = rand() %50;
+	   newY = rand() %50;
 	}while(board[newX][newY] != 0);
+
 	board[newX][newY] = 2;
 	delete object;
 	object = new Sprite(blue,newX*10,newY*10,10,10);
